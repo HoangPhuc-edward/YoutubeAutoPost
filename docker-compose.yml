@@ -1,0 +1,23 @@
+services:
+  # Dịch vụ Backend (FastAPI)
+  backend:
+    build: ./src
+    container_name: backend_api
+    environment:
+      # Kết nối tới Ollama trên máy host (Windows/Mac)
+      - OLLAMA_HOST=host.docker.internal:11434 
+    volumes:
+      - ./backend/data_storage:/app/data_storage
+    ports:
+      - "8000:8000"
+    extra_hosts:
+      - "host.docker.internal:host-gateway" # Quan trọng để kết nối ra ngoài container
+
+  # Dịch vụ Frontend (React)
+  frontend:
+    build: ./wiki-client
+    container_name: frontend_web
+    depends_on:
+      - backend
+    ports:
+      - "80:80"

@@ -1,0 +1,247 @@
+/* --- GLOBAL RESET --- */
+:root {
+  --primary-color: #2563eb;
+  --bg-color: #f8fafc;
+  --border-color: #e2e8f0;
+  --text-primary: #1e293b;
+  --text-secondary: #64748b;
+}
+
+#root {
+  width: 100%;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  margin: 0;
+  font-family: 'Segoe UI', Inter, sans-serif;
+  background-color: var(--bg-color);
+  color: var(--text-primary);
+  line-height: 1.5;
+}
+
+/* --- TRANG INTRO (Căn giữa hoàn toàn) --- */
+.intro-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh; /* Chiếm toàn màn hình */
+  width: 100%;
+  background: white;
+  text-align: center;
+}
+
+.intro-header h1 { font-size: 3.5rem; color: var(--text-primary); margin-bottom: 0.5rem; }
+.features-grid { display: flex; gap: 2rem; margin: 3rem 0; justify-content: center; flex-wrap: wrap;}
+.feature-card { width: 280px; padding: 2rem; background: #f1f5f9; border-radius: 12px; text-align: left; }
+.big-btn { padding: 1rem 3rem; font-size: 1.2rem; background: var(--primary-color); color: white; border: none; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 10px;}
+
+/* --- TRANG DASHBOARD (Căn giữa nội dung) --- */
+.dashboard-container {
+  max-width: 1200px;
+  margin: 0 auto; /* Căn giữa block */
+  padding: 40px 20px;
+  width: 100%;
+}
+
+.dashboard-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+.session-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+.session-card { background: white; padding: 20px; border-radius: 12px; border: 1px solid var(--border-color); height: 160px; display: flex; flex-direction: column; justify-content: space-between; cursor: pointer; transition: 0.2s; }
+.session-card:hover { box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); border-color: var(--primary-color); }
+
+/* --- TRANG WORKSPACE (Layout 3 cột) --- */
+.workspace-layout {
+  display: grid;
+  grid-template-columns: 320px 1fr 300px; /* Cột Trái - Giữa - Phải */
+  height: 100vh;
+  width: 100vw;
+  background: white;
+  overflow: hidden; /* Không scroll cả trang */
+}
+
+/* Cột chung */
+.ws-col {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow-y: hidden; /* Scroll bên trong nội dung */
+  border-right: 1px solid var(--border-color);
+  background: white;
+}
+.ws-col:last-child { border-right: none; background: #fafafa; }
+
+/* Header của từng cột */
+.col-header {
+  padding: 15px 20px;
+  border-bottom: 1px solid var(--border-color);
+  font-weight: 600;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: white;
+}
+
+/* Nội dung cuộn của từng cột */
+.col-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+}
+
+/* Cột Nguồn (Trái) */
+.dropzone-area {
+  border: 2px dashed #cbd5e1;
+  border-radius: 8px;
+  padding: 30px;
+  text-align: center;
+  color: var(--text-secondary);
+  cursor: pointer;
+  margin-bottom: 20px;
+  background: #f8fafc;
+}
+.dropzone-area:hover { border-color: var(--primary-color); background: #eff6ff; }
+.source-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  border-bottom: 1px solid #f1f5f9;
+  font-size: 0.9rem;
+}
+.source-status { margin-left: auto; }
+
+/* Cột Editor (Giữa) */
+.markdown-preview {
+  max-width: 800px;
+  margin: 0 auto;
+  line-height: 1.7;
+  color: #334155;
+}
+.markdown-preview h1, .markdown-preview h2 { color: #0f172a; margin-top: 1.5em; }
+
+/* Cột Dàn ý & Prompt (Phải) */
+.outline-item {
+  padding: 8px 12px;
+  cursor: pointer;
+  border-radius: 6px;
+  margin-bottom: 5px;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+.outline-item:hover { background: #e2e8f0; color: var(--text-primary); }
+.prompt-box {
+  background: white;
+  padding: 15px;
+  border-top: 1px solid var(--border-color);
+  margin-top: auto; /* Đẩy xuống đáy */
+}
+/* --- SETTINGS PAGE --- */
+.model-list { display: flex; flex-direction: column; gap: 15px; }
+.model-card {
+  padding: 15px; border: 1px solid #e2e8f0; border-radius: 8px; background: white;
+  display: flex; justify-content: space-between; align-items: center;
+}
+.active-model { border: 2px solid #2563eb; background: #eff6ff; }
+.badge {
+  background: #2563eb; color: white; font-size: 0.7rem; padding: 2px 6px; 
+  border-radius: 4px; text-transform: uppercase;
+}
+.delete-btn-text {
+  background: none; color: #ef4444; border: none; font-size: 0.8rem; 
+  cursor: pointer; text-align: right; text-decoration: underline;
+}
+
+.form-box { background: white; padding: 25px; border-radius: 12px; border: 1px solid #e2e8f0; }
+.form-group { margin-bottom: 15px; }
+.form-group label { display: block; margin-bottom: 5px; font-weight: 500; font-size: 0.9rem; }
+.form-group input, .form-group select {
+  width: 100%; padding: 8px 10px; border: 1px solid #ccc; border-radius: 6px;
+  box-sizing: border-box; /* Quan trong de khong bi vo khung */
+}
+/* App.css bổ sung */
+.seo-field label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 5px;
+  font-size: 0.85rem;
+  color: #475569;
+}
+
+.seo-field input, .seo-field textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  font-size: 0.95rem;
+}
+
+.form-input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  margin-top: 5px;
+}
+
+/* App.css bổ sung */
+.save-btn {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 15px;
+  background: #10b981; /* Màu xanh lá cho nút Lưu */
+  color: white;
+  border-radius: 6px;
+  border: none;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.save-btn:hover { background: #059669; }
+.save-btn:disabled { background: #9ca3af; cursor: not-allowed; }
+
+
+/* App.css bổ sung */
+.ws-label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #334155;
+}
+
+.ws-input, .ws-textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  background: #fff;
+}
+
+.full-editor {
+  width: 100%;
+  height: calc(100vh - 150px);
+  border: none;
+  resize: none;
+  font-family: inherit;
+  font-size: 1.05rem;
+  line-height: 1.6;
+  padding: 10px;
+  outline: none;
+  color: #1e293b;
+}
+
+.action-btn {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 12px;
+  background: #2563eb;
+  color: white;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  cursor: pointer;
+}

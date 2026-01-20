@@ -1,0 +1,14 @@
+fastapi
+uvicorn
+sqlalchemy
+openai
+requests
+pydantic
+chromadb
+sentence-transformers
+langchain-text-splitters
+openai-whisper
+yt-dlp
+trafilatura
+pymupdf
+python-docx

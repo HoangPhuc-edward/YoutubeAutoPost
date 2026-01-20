@@ -1,0 +1,15 @@
+# Python rác
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.env
+
+# Database & Storage (Dữ liệu cá nhân)
+data_storage/
+temp_uploads/
+
+# Frontend rác
+wiki-client/node_modules/
+wiki-client/dist/
+.DS_Store
