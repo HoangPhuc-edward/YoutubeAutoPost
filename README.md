@@ -78,6 +78,13 @@ Hệ thống hỗ trợ linh hoạt giữa AI chạy cục bộ và API đám m�
     - Thêm cấu hình API Key và Endpoint tương ứng để sử dụng các mô hình AI trên Cloud.
 
 ---
+## ⚙️ Hướng dẫn sử dụng
+
+1. Thêm model LLM muốn sử dụng. Tại Thư viện, nhấn "Cài đặt AI" để có thể tuỳ chỉnh mô hình LLM mà bạn muốn sử dụng (Ollama hoặc GroqAPI)
+2. Nhấn "Tạo bài viết mới", sau đó nhập tên và thêm url youtube, công cụ sẽ tự động xử lý và cho ra bài viết
+3. Copy vào clipboard để có thể sử dụng tiếp tục
+
+---
 
 ## 📖 Tính năng chính
 
