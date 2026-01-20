@@ -9,17 +9,29 @@
 Trước khi bắt đầu, hãy đảm bảo máy tính của bạn đã cài đặt các thành phần sau:
 * Python 3.10+: Nền tảng để chạy Backend API.
 * Node.js: Phiên bản mới nhất để khởi chạy Frontend React.
-* FFmpeg: Công cụ bắt buộc để xử lý âm thanh từ video YouTube.
+* **FFmpeg**: Công cụ bắt buộc để xử lý âm thanh từ video YouTube.
+
+### 📦 Hướng dẫn cài đặt FFmpeg và cấu hình System Path (Windows)
+1. Tải bản build FFmpeg mới nhất tại: [https://www.gyan.dev/ffmpeg/builds/](https://www.gyan.dev/ffmpeg/builds/) (Chọn bản `ffmpeg-git-full.7z`).
+2. Giải nén thư mục vào ổ đĩa (Ví dụ: `C:\ffmpeg`).
+3. Sao chép đường dẫn đến thư mục `bin` bên trong (Ví dụ: `C:\ffmpeg\bin`).
+4. Thêm vào System Path:
+    - Tìm kiếm "Edit the system environment variables" trên máy tính.
+    - Nhấn vào nút **Environment Variables**.
+    - Tại mục **System variables**, tìm và chọn dòng **Path**, sau đó nhấn **Edit**.
+    - Nhấn **New** và dán đường dẫn thư mục `bin` đã copy ở trên vào.
+    - Nhấn **OK** để lưu lại tất cả các cửa sổ.
+5. Kiểm tra bằng lệnh: `ffmpeg -version` trong terminal.
 
 ---
 
-## 📥 Hướng dẫn cài đặt
+## 📥 Hướng dẫn cài đặt dự án
 
 ### 1. Cài đặt Backend
 Mở terminal và di chuyển vào thư mục nguồn của dự án:
 cd src
 
-Cài đặt các thư viện cần thiết từ file requirements.txt có sẵn:
+Cài đặt các thư viện từ file requirements.txt có sẵn:
 pip install -r requirements.txt
 
 Khởi chạy server:
