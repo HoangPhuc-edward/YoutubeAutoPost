@@ -29,26 +29,38 @@ Trước khi bắt đầu, hãy đảm bảo máy tính của bạn đã cài đ
 
 ### 1. Cài đặt Backend
 Mở terminal và di chuyển vào thư mục nguồn của dự án:
+```
 cd src
+```
 
 Cài đặt các thư viện từ file requirements.txt có sẵn:
+```
 pip install -r requirements.txt
+```
 
 Khởi chạy server:
+```
 python api.py
+```
 (Server sẽ mặc định chạy tại địa chỉ: http://localhost:8000)
 
 ---
 
 ### 2. Cài đặt Frontend
 Mở một terminal mới và di chuyển vào thư mục giao diện:
+```
 cd wiki-client
+```
 
 Cài đặt các gói phụ thuộc:
+```
 npm install
+```
 
 Khởi chạy giao diện người dùng:
+```
 npm run dev
+```
 (Truy cập ứng dụng tại địa chỉ: http://localhost:5173)
 
 ---
