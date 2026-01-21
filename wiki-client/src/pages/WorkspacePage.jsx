@@ -64,6 +64,33 @@ const WorkspacePage = () => {
     alert("Đã sao chép toàn bộ nội dung!");
   };
 
+  const handleSaveToDrive = async () => {
+    if (!fullContent) return alert("Chưa có nội dung để lưu!");
+    
+    const fileName = `${id || 'wiki_article'}.txt`;
+    
+    // Hỏi xác nhận trước khi lưu (vì sẽ mở cửa sổ đăng nhập Google ở server)
+    if (!confirm(`Bạn muốn lưu file "${fileName}" vào Google Drive? (Cửa sổ trình duyệt có thể bật lên để xác thực)`)) return;
+
+    try {
+      const res = await axios.post(`${API_URL}/sessions/${id}/save-drive`, {
+        filename: fileName,
+        content: fullContent
+      });
+      
+      alert("Đã lưu thành công! Link: " + res.data.link);
+      // Mở tab mới tới file vừa tạo (tùy chọn)
+      window.open(res.data.link, '_blank');
+      
+    } catch (error) {
+      console.error(error);
+      alert("Lỗi lưu Drive: " + (error.response?.data?.detail || "Kiểm tra lại Server/Credentials"));
+    } finally {
+      console.log("Xong quá trình lưu Drive");
+    }
+  };
+
+
   return (
     <div className="workspace-layout" style={{ gridTemplateColumns: "400px 1fr" }}>
       
@@ -104,12 +131,15 @@ const WorkspacePage = () => {
             <button className="save-btn" onClick={handleSave} disabled={saving || !fullContent}>
               {saving ? <Loader2 className="spin" size={14}/> : <Save size={16}/>} Lưu bài
             </button>
+            <button className="save-btn" onClick={handleSaveToDrive} disabled={saving || !fullContent}>
+              {saving ? <Loader2 className="spin" size={14}/> : <Save size={16}/>} Lưu vào Drive
+            </button>
             <button className="action-btn" onClick={handleCopy} disabled={!fullContent}>
               <Copy size={16}/> Sao chép
             </button>
           </div>
         </div>
-        <div className="col-content" style={{padding: 0}}>
+        <div className="col-content" style={{padding: 10}}>
           <textarea 
             className="full-editor"
             value={fullContent}

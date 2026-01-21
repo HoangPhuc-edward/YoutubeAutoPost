@@ -1,4 +1,41 @@
 /* --- GLOBAL RESET --- */
+/* --- GLOBAL RESET --- */
+* {
+  box-sizing: border-box; /* Ép padding không làm tăng kích thước thật của phần tử */
+}
+
+/* Sửa lại layout Grid để khớp với code React của bạn */
+.workspace-layout {
+  display: grid;
+  /* Bạn đang dùng 2 cột trong code React, hãy thống nhất tại đây */
+  grid-template-columns: 400px 1fr; 
+  height: 100vh;
+  width: 100%; /* Dùng 100% thay vì 100vw để tránh thanh scroll ngang */
+  background: white;
+  overflow: hidden;
+}
+
+.full-editor {
+  width: 100%;
+  height: 100%; /* Để parent (col-content) quản lý scroll */
+  border: none;
+  resize: none;
+  font-family: inherit;
+  font-size: 1.05rem;
+  line-height: 1.6;
+  padding: 0; /* Xóa padding ở đây để tránh tràn */
+  outline: none;
+  color: #1e293b;
+}
+
+/* Ép cột nội dung không được vượt quá chiều cao màn hình */
+.col-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+}
 :root {
   --primary-color: #2563eb;
   --bg-color: #f8fafc;

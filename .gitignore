@@ -8,6 +8,8 @@ venv/
 # Database & Storage (Dữ liệu cá nhân)
 data_storage/
 temp_uploads/
+credentials.json
+token.json
 
 # Frontend rác
 wiki-client/node_modules/

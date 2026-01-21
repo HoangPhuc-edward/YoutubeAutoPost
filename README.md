@@ -85,6 +85,30 @@ Hệ thống hỗ trợ linh hoạt giữa AI chạy cục bộ và API đám m�
 3. Copy vào clipboard để có thể sử dụng tiếp tục
 
 ---
+## 🔑 Hướng dẫn cấu hình Google Drive (Để sử dụng tính năng Lưu vào Drive)
+
+Để ứng dụng có quyền lưu file trực tiếp vào Google Drive của bạn, hãy thực hiện các bước sau:
+1. Truy cập Google Cloud Console: Đăng nhập vào Google Cloud Console bằng tài khoản Gmail của bạn.
+2. Tạo dự án mới: Nhấn vào danh sách dự án ở góc trên bên trái, chọn "New Project", đặt tên bất kỳ (ví dụ: YoutubeAutoPost) và nhấn "Create".
+3. Bật Google Drive API: Tìm kiếm từ khóa "Google Drive API" trên thanh tìm kiếm ở trên cùng, chọn kết quả tương ứng và nhấn nút "Enable".
+4. Thiết lập màn hình xác thực (OAuth Consent Screen):
+- Chọn mục "OAuth consent screen" ở cột bên trái.
+- Chọn "External" rồi nhấn "Create".
+- Chỉ cần điền các thông tin bắt buộc: App name, User support email và Developer contact info (có thể dùng email của bạn cho cả 3 mục).
+- Nhấn "Save and Continue" cho đến khi hoàn tất.
+5. Tạo thông tin xác thực (Credentials):
+- Chọn mục "Credentials" ở cột bên trái.
+- Nhấn "Create Credentials" ở phía trên, chọn "OAuth client ID".
+- Ở mục Application type, chọn "Desktop app".
+- Nhấn "Create", sau đó một bảng hiện ra, hãy nhấn "Download JSON".
+6. Cài đặt vào dự án:
+- Đổi tên file vừa tải về thành chính xác là credentials.json.
+- Sao chép và dán file này vào thư mục src của dự án (nằm cùng cấp với file api.py).
+
+⚠️ Lưu ý quan trọng: Lần đầu tiên bạn nhấn nút "Lưu vào Drive" trên ứng dụng, một cửa sổ trình duyệt sẽ hiện ra yêu cầu bạn đăng nhập và cấp quyền. Hãy nhấn chọn tài khoản của bạn và đồng ý để hoàn tất kết nối.
+
+
+
 
 ## 📖 Tính năng chính
 
