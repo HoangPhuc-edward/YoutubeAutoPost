@@ -251,6 +251,19 @@ def gen_youtube_seo(session_id: str, req: YoutubeSeoReq):
 
 
 # --- API MỚI: LƯU VÀO DRIVE ---
+@app.get("/check-drive-setup")
+def check_drive_setup():
+    # Kiểm tra file credentials.json nằm cùng cấp với api.py (thư mục src)
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    creds_path = os.path.join(current_dir, "credentials.json")
+    
+    if not os.path.exists(creds_path):
+        return {
+            "ready": False, 
+            "message": "Thiếu file 'credentials.json' trong thư mục src. Vui lòng thiết lập theo hướng dẫn."
+        }
+    return {"ready": True}
+
 @app.post("/sessions/{session_id}/save-drive")
 def save_to_drive(session_id: str, req: DriveSaveReq):
     try:

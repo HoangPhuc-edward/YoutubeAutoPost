@@ -94,9 +94,7 @@ const DashboardPage = () => {
                 </button>
               </div>
               <h3>{sess.title}</h3>
-              <p className="time">
-                {formatDistanceToNow(new Date(sess.created_at), { addSuffix: true, locale: vi })}
-              </p>
+              
             </div>
           ))}
         </div>

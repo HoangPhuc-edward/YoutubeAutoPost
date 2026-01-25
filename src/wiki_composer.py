@@ -1,5 +1,6 @@
 import os
 import json
+import random
 import uuid
 import re
 from typing import List, Dict, Set, Optional
@@ -290,31 +291,29 @@ class WikiComposer:
                 suggestions.append(text)
         return suggestions
     
-    def generate_youtube_seo(self, session_id: str, custom_prompt: Optional[str] = None) -> str:
-        """
-        Viết bài SEO YouTube dưới dạng văn bản liền mạch (Markdown)
-        """
-        # Lấy nội dung từ Vector DB
-        results = self.collection.get(where={"doc_name": session_id}, limit=10)
-        if not results['documents']:
-            return "Nội dung video chưa được xử lý."
-        
-        context = "\n".join(results['documents'])
 
-        # Prompt yêu cầu viết liền mạch
-        default_instruction = (
-            "Bạn là chuyên gia YouTube SEO. Hãy viết một bài đăng hoàn chỉnh bao gồm: "
-            "Tiêu đề thu hút, Mô tả chi tiết (khoảng 500 chữ) và Danh sách Hashtag. "
-            "Trình bày dưới dạng văn bản Markdown liền mạch, chuyên nghiệp."
+    def generate_youtube_seo(self, session_id: str, custom_prompt: str) -> str:
+        # 1. Lấy bối cảnh (Context)
+        results = self.collection.get(where={"doc_name": session_id})
+        context = "\n".join(results['documents'][:15])
+
+        # 2. System Prompt tối giản - Chỉ giữ lại quy tắc "Sạch"
+        # Chúng ta bỏ hết các yêu cầu về SEO, tiêu đề... để người dùng tự quyết
+        system_rules = (
+            "QUY TẮC BẮT BUỘC: Trả về văn bản Markdown sạch. "
+            "KHÔNG sử dụng các nhãn như 'Mô tả:', 'Hashtag:'. "
+            "KHÔNG dẫn giải dông dài. Phản hồi trực tiếp vào nội dung."
         )
-        
-        final_instruction = custom_prompt if custom_prompt else default_instruction
-        
+
+        # 3. Kết hợp chỉ thị của người dùng
+        # Ở đây, yêu cầu của Phúc là trung tâm
         prompt = f"""
-        Nội dung video: {context[:6000]}
+        {system_rules}
         ---
-        Yêu cầu: {final_instruction}
+        BỐI CẢNH VIDEO: {context}
+        ---
+        YÊU CẦU CỦA NGƯỜI DÙNG: {custom_prompt}
         """
 
-        # Trả về văn bản thuần
         return self.llm.send_prompt(prompt, options={"temperature": 0.7})
+        
