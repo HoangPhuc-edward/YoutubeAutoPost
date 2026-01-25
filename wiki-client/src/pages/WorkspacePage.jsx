@@ -18,7 +18,7 @@ const WorkspacePage = () => {
 
   const [urlInput, setUrlInput] = useState("");
   const [contentPrompt, setContentPrompt] = useState('Gợi ý 3 tiêu đề (mỗi tiêu đề khoảng 50 - 100 chữ), Tóm tắt nội dung chính và các điểm quan trọng nhất của video. (khoảng 300 - 500 chữ), gợi ý 5 hashtag liên quan đến video, giữa mỗi hashtag có dấu phẩy.');
-  const [stylePrompt, setStylePrompt] = useState('Mỗi tiêu đề trên một dòng, mô tả được viết dưới dạng mô tả YouTube, sử dụng emoji, phân đoạn rõ ràng và thêm giữa các hashtag là dấu phẩy.');
+  const [stylePrompt, setStylePrompt] = useState('Mỗi tiêu đề trên một dòng, mô tả được viết dưới dạng mô tả YouTube, sử dụng emoji, phân đoạn rõ ràng, thêm markdown đẹp mắt và thêm giữa các hashtag là dấu phẩy.');
   const [fullContent, setFullContent] = useState("");
   const [driveFileName, setDriveFileName] = useState("wiki_text.txt");
 
@@ -88,47 +88,51 @@ const WorkspacePage = () => {
   };
 
   // --- COMPONENT MODAL CHỈNH SỬA PROMPT ---
-  const EditPromptModal = () => (
-    <div style={{
-      position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh',
-      backgroundColor: 'rgba(0,0,0,0.6)', display: 'flex', justifyContent: 'center',
-      alignItems: 'center', zIndex: 1000, backdropFilter: 'blur(4px)'
-    }}>
-      <div style={{
-        backgroundColor: 'white', width: '600px', borderRadius: '12px',
-        overflow: 'hidden', boxShadow: '0 20px 25px -5px rgba(0,0,0,0.2)'
-      }}>
-        <div style={{ padding: '20px', borderBottom: '1px solid #eee', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <h3 style={{ margin: 0 }}>Tuỳ chỉnh prompt</h3>
-          <X style={{ cursor: 'pointer' }} onClick={() => setShowModal(false)} />
-        </div>
-        <div style={{ padding: '20px' }}>
-          <label style={{ display: 'block', fontWeight: 'bold', marginBottom: '8px' }}>Yêu cầu Nội dung</label>
-          <textarea 
-            style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid #ccc', marginBottom: '20px' }}
-            rows="4" value={contentPrompt} onChange={(e) => setContentPrompt(e.target.value)}
-          />
-          <label style={{ display: 'block', fontWeight: 'bold', marginBottom: '8px' }}>Yêu cầu Trình bày</label>
-          <textarea 
-            style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid #ccc' }}
-            rows="4" value={stylePrompt} onChange={(e) => setStylePrompt(e.target.value)}
-          />
-        </div>
-        <div style={{ padding: '20px', backgroundColor: '#f9f9f9', textAlign: 'right' }}>
-          <button 
-            style={{ padding: '10px 20px', backgroundColor: '#2563eb', color: 'white', border: 'none', borderRadius: '8px', cursor: 'pointer' }}
-            onClick={handleGenerate}
-          >
-            Xác nhận & Tạo lại
-          </button>
-        </div>
-      </div>
-    </div>
-  );
+  
 
   return (
     <div className="wizard-container">
-      {showModal && <EditPromptModal />}
+      {showModal && (
+      <div style={{
+        position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh',
+        backgroundColor: 'rgba(0,0,0,0.6)', display: 'flex', justifyContent: 'center',
+        alignItems: 'center', zIndex: 1000, backdropFilter: 'blur(4px)'
+      }}>
+        <div style={{
+          backgroundColor: 'white', width: '600px', borderRadius: '12px',
+          overflow: 'hidden', boxShadow: '0 20px 25px -5px rgba(0,0,0,0.2)'
+        }}>
+          <div style={{ padding: '20px', borderBottom: '1px solid #eee', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <h3 style={{ margin: 0 }}>Tuỳ chỉnh prompt</h3>
+            <X style={{ cursor: 'pointer' }} onClick={() => setShowModal(false)} />
+          </div>
+          <div style={{ padding: '20px' }}>
+            <label style={{ display: 'block', fontWeight: 'bold', marginBottom: '8px' }}>Yêu cầu Nội dung</label>
+            <textarea 
+              style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid #ccc', marginBottom: '20px' }}
+              rows="4" 
+              value={contentPrompt} 
+              onChange={(e) => setContentPrompt(e.target.value)}
+            />
+            <label style={{ display: 'block', fontWeight: 'bold', marginBottom: '8px' }}>Yêu cầu Trình bày</label>
+            <textarea 
+              style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid #ccc' }}
+              rows="4" 
+              value={stylePrompt} 
+              onChange={(e) => setStylePrompt(e.target.value)}
+            />
+          </div>
+          <div style={{ padding: '20px', backgroundColor: '#f9f9f9', textAlign: 'right' }}>
+            <button 
+              style={{ padding: '10px 20px', backgroundColor: '#2563eb', color: 'white', border: 'none', borderRadius: '8px', cursor: 'pointer' }}
+              onClick={handleGenerate}
+            >
+              Xác nhận & Tạo lại
+            </button>
+          </div>
+        </div>
+      </div>
+    )}
 
       <header className="wizard-header">
         <button className="back-circle-btn" onClick={() => {

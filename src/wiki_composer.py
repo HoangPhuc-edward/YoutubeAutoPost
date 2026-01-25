@@ -300,7 +300,7 @@ class WikiComposer:
         # 2. System Prompt tối giản - Chỉ giữ lại quy tắc "Sạch"
         # Chúng ta bỏ hết các yêu cầu về SEO, tiêu đề... để người dùng tự quyết
         system_rules = (
-            "QUY TẮC BẮT BUỘC: Trả về văn bản Markdown sạch. "
+            "QUY TẮC BẮT BUỘC: Trả về văn bản Markdown sạch."
             "KHÔNG sử dụng các nhãn như 'Mô tả:', 'Hashtag:'. "
             "KHÔNG dẫn giải dông dài. Phản hồi trực tiếp vào nội dung."
         )
