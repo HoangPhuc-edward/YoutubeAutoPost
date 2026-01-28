@@ -227,6 +227,7 @@ def delete_model(model_id: int, db: Session = Depends(get_db)):
     db.commit()
     return {"status": "deleted"}
 
+import yt_dlp
 @app.post("/models/test")
 def test_model_connection(config: LLMConfigCreate):
     """Test kết nối trước khi lưu"""
@@ -277,7 +278,44 @@ def save_to_drive(session_id: str, req: DriveSaveReq):
     except Exception as e:
         print(f"Lỗi Drive: {e}")
         raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/get-youtube-title")
+def get_yt_title(req: UrlRequest):
+    try:
+        ydl_opts = {'quiet': True, 'no_warnings': True}
+        with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+            info = ydl.extract_info(req.url, download=False)
+            return {"title": info.get('title', 'Chủ đề mới')}
+    except Exception as e:
+        raise HTTPException(status_code=400, detail="Không thể lấy tiêu đề video.")
+
+import requests # Cần pip install requests
+from datetime import datetime
+
+# URL bạn vừa copy từ Google Apps Script
+GAS_WEBAPP_URL = "https://script.google.com/macros/s/AKfycbyK0L9JDbe1BLCFMwvTAHjUKD5bi1OTy-n_yXqwicyM_f7hbFQA-ni4eARADZI3BGnR/exec"
+
+@app.post("/sessions/{session_id}/save-sheet")
+def save_to_sheet(session_id: str, req: SaveReq, db: Session = Depends(get_db)):
+    sess = db.query(SessionModel).filter(SessionModel.id == session_id).first()
+    if not sess: raise HTTPException(404, "Not found")
     
+    # Chuẩn bị dữ liệu theo 4 cột yêu cầu
+    payload = {
+        "url": sess.sources[0].source_path if sess.sources else "N/A",
+        "title": sess.title,
+        "timestamp": datetime.now().strftime("%H:%M %d/%m/%Y"),
+        "content": req.content
+    }
+    
+    try:
+        # Đẩy dữ liệu sang Apps Script
+        response = requests.post(GAS_WEBAPP_URL, json=payload)
+        return {"status": "success", "message": response.text}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000)

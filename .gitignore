@@ -10,6 +10,8 @@ data_storage/
 temp_uploads/
 credentials.json
 token.json
+*.db
+wiki_app.db
 
 # Frontend rác
 wiki-client/node_modules/

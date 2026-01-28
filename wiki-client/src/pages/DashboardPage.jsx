@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { formatDistanceToNow } from 'date-fns';
-import { vi } from 'date-fns/locale';
+
 import { Plus, FileText, Trash2, Loader, Settings } from 'lucide-react';
 
 const API_URL = "http://localhost:8000";
@@ -29,15 +28,24 @@ const DashboardPage = () => {
   };
 
   const handleCreateNew = async () => {
-    const title = prompt("Nhập tên chủ đề bài viết mới:", "Chủ đề mới");
-    if (!title) return;
+    const url = prompt("Dán link YouTube để bắt đầu:", "");
+    if (!url) return;
 
+    setLoading(true);
     try {
-      const res = await axios.post(`${API_URL}/sessions`, { title });
-      // Tao xong chuyen huong ngay den trang Workspace
-      navigate(`/workspace/${res.data.id}`);
+      // 1. Lấy tiêu đề video tự động
+      const titleRes = await axios.post(`${API_URL}/get-youtube-title`, { url, type: "youtube" });
+      const autoTitle = titleRes.data.title;
+
+      // 2. Tạo session với tiêu đề đã lấy
+      const res = await axios.post(`${API_URL}/sessions`, { title: autoTitle });
+      
+      // 3. Chuyển hướng và tự động điền URL ở Workspace (thông qua state hoặc tự xử lý ở Workspace)
+      navigate(`/workspace/${res.data.id}`, { state: { initialUrl: url } });
     } catch (error) {
-      alert("Không thể tạo bài viết mới");
+      alert("Lỗi: " + (error.response?.data?.detail || "Không thể khởi tạo bài viết"));
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -49,7 +57,7 @@ const DashboardPage = () => {
       await axios.delete(`${API_URL}/sessions/${id}`);
       setSessions(sessions.filter(s => s.id !== id));
     } catch (error) {
-      alert("Lỗi khi xóa");
+      alert("Lỗi khi xóa", error);
     }
   };
 
@@ -93,7 +101,16 @@ const DashboardPage = () => {
                   <Trash2 size={16} />
                 </button>
               </div>
-              <h3>{sess.title}</h3>
+              <h3 style={{display: '-webkit-box',
+      WebkitLineClamp: 2,           // Giới hạn tối đa 2 dòng
+      WebkitBoxOrient: 'vertical',
+      overflow: 'hidden',           // Ẩn phần thừa
+      textOverflow: 'ellipsis',    // Thêm dấu ba chấm
+      marginTop: '10px',
+      fontSize: '1rem',
+      lineHeight: '1.4',            // Độ cao dòng để tính toán chính xác
+      height: '2.8em',              // (lineHeight * 2) để cố định khung card
+      wordBreak: 'break-word'}}>{sess.title}</h3>
               
             </div>
           ))}
