@@ -1,0 +1,5 @@
+{
+  "GAS_WEBAPP_URL": "https://script.google.com/macros/s/AKfycbxoupNSWp2k785_4CSHErqdAYNSKlIWXaJZGYcyKEIY8y8Sv1krWAhMydSGSSe0l6UV/exec",
+  "MY_SHEET_URL": "https://docs.google.com/spreadsheets/d/1iKXsStSF5tl1Hbf3QBTC2CoN91x4-WulxwYOZEbYEFI/edit?usp=drivesdk",
+  "API_URL": "http://localhost:8000"
+}

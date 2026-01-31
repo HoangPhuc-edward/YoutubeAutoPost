@@ -13,8 +13,10 @@ from database import SessionModel, SourceModel, get_db, init_db
 from wiki_composer import WikiComposer
 from database import SessionLocal, LLMConfig
 from drive_service import upload_text_to_drive
+import json
 # Khoi tao DB & App
 init_db()
+
 app = FastAPI()
 
 app.add_middleware(
@@ -79,13 +81,14 @@ def get_session(session_id: str, db: Session = Depends(get_db)):
     return {
         "id": sess.id, "title": sess.title, 
         "wiki_content": sess.wiki_content, "outline": outline,
-        "sources": sess.sources
+        "sources": sess.sources,
     }
 
 @app.put("/sessions/{session_id}/save")
 def save_session(session_id: str, req: SaveReq, db: Session = Depends(get_db)):
     sess = db.query(SessionModel).filter(SessionModel.id == session_id).first()
     if not sess: raise HTTPException(404, "Not found")
+    
     sess.wiki_content = req.content
     sess.outline = json.dumps(req.outline, ensure_ascii=False)
     db.commit()
@@ -227,7 +230,25 @@ def delete_model(model_id: int, db: Session = Depends(get_db)):
     db.commit()
     return {"status": "deleted"}
 
-import yt_dlp
+@app.put("/models/{model_id}")
+def update_model(model_id: int, config: LLMConfigCreate, db: Session = Depends(get_db)):
+    """Cập nhật thông tin cấu hình model đã có"""
+    target = db.query(LLMConfig).filter(LLMConfig.id == model_id).first()
+    if not target:
+        raise HTTPException(404, "Model not found")
+    
+    # Ghi đè các thông tin mới từ config gửi lên
+    target.name = config.name
+    target.provider = config.provider
+    target.base_url = config.base_url
+    target.api_key = config.api_key
+    target.model_name = config.model_name
+    
+    db.commit()
+    db.refresh(target)
+    return target
+
+
 @app.post("/models/test")
 def test_model_connection(config: LLMConfigCreate):
     """Test kết nối trước khi lưu"""
@@ -242,7 +263,7 @@ def test_model_connection(config: LLMConfigCreate):
 
 class YoutubeSeoReq(BaseModel):
     custom_prompt: Optional[str] = None
-
+import yt_dlp
 @app.post("/sessions/{session_id}/generate-youtube-seo")
 def gen_youtube_seo(session_id: str, req: YoutubeSeoReq):
     # Trả về chuỗi văn bản liền mạch từ composer
@@ -293,14 +314,26 @@ import requests # Cần pip install requests
 from datetime import datetime
 
 # URL bạn vừa copy từ Google Apps Script
-GAS_WEBAPP_URL = "https://script.google.com/macros/s/AKfycbyK0L9JDbe1BLCFMwvTAHjUKD5bi1OTy-n_yXqwicyM_f7hbFQA-ni4eARADZI3BGnR/exec"
+def load_project_config():
+    config_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "config.json")
+    if os.path.exists(config_path):
+        with open(config_path, "r", encoding="utf-8") as f:
+            return json.load(f)
+    return {}
+
+config_data = load_project_config()
+GAS_WEBAPP_URL = config_data.get("GAS_WEBAPP_URL", "")
+
+@app.get("/get-config")
+def get_config():
+    return load_project_config()
+
 
 @app.post("/sessions/{session_id}/save-sheet")
 def save_to_sheet(session_id: str, req: SaveReq, db: Session = Depends(get_db)):
     sess = db.query(SessionModel).filter(SessionModel.id == session_id).first()
     if not sess: raise HTTPException(404, "Not found")
     
-    # Chuẩn bị dữ liệu theo 4 cột yêu cầu
     payload = {
         "url": sess.sources[0].source_path if sess.sources else "N/A",
         "title": sess.title,
@@ -309,10 +342,29 @@ def save_to_sheet(session_id: str, req: SaveReq, db: Session = Depends(get_db)):
     }
     
     try:
-        # Đẩy dữ liệu sang Apps Script
+        # 1. Thực hiện gửi request
         response = requests.post(GAS_WEBAPP_URL, json=payload)
+        
+        # 2. In ra để debug (Response 500 sẽ hiện text lỗi ở đây)
+        print(f"Status Code: {response.status_code}")
+        print(f"Full Response: {response.text}") 
+
+        # 3. Kiểm tra nếu không phải mã 200 (Thành công)
+        if response.status_code != 200:
+            # Gửi lỗi về Frontend để bạn biết cụ thể là lỗi gì
+            raise HTTPException(
+                status_code=response.status_code, 
+                detail=f"Google Apps Script Error: {response.text[:200]}"
+            )
+
         return {"status": "success", "message": response.text}
+
+    except requests.exceptions.RequestException as e:
+        # Bắt các lỗi kết nối mạng, timeout...
+        print(f"Connection Error: {e}")
+        raise HTTPException(status_code=500, detail="Không thể kết nối tới Google Script.")
     except Exception as e:
+        # Bắt các lỗi phát sinh khác
         raise HTTPException(status_code=500, detail=str(e))
 
 

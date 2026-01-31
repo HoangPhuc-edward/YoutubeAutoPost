@@ -9,8 +9,8 @@ const SettingsPage = () => {
   const navigate = useNavigate();
   const [models, setModels] = useState([]);
   const [loading, setLoading] = useState(true);
-
-  // Form State
+  const [editingModel, setEditingModel] = useState(null);
+ 
   const [formData, setFormData] = useState({
     name: "Groq Llama3",
     provider: "openai", // mac dinh
@@ -31,7 +31,7 @@ const SettingsPage = () => {
       const res = await axios.get(`${API_URL}/models`);
       setModels(res.data);
     } catch (error) {
-      console.error("Lỗi tải models");
+      console.error("Lỗi tải models", error);
     } finally {
       setLoading(false);
     }
@@ -57,6 +57,20 @@ const SettingsPage = () => {
     setFormData(newData);
   };
 
+  
+  const handleEdit = (model) => {
+    setEditingModel(model);
+    setFormData({
+      name: model.name,
+      provider: model.provider,
+      base_url: model.base_url,
+      api_key: model.api_key || "",
+      model_name: model.model_name
+    });
+    window.scrollTo({ top: 0, behavior: 'smooth' }); // Cuộn lên đầu để sửa
+  };
+
+
   const handleTestConnection = async () => {
     setTestStatus('testing');
     setTestMsg("Đang kết nối thử...");
@@ -71,21 +85,29 @@ const SettingsPage = () => {
   };
 
   const handleSave = async () => {
-    if (testStatus !== 'success') {
-      if (!confirm("Bạn chưa test kết nối thành công. Có chắc muốn lưu không?")) return;
-    }
-    try {
+  if (testStatus !== 'success') {
+    if (!confirm("Bạn chưa test kết nối thành công. Có chắc muốn lưu không?")) return;
+  }
+  try {
+    if (editingModel) {
+      // Nếu đang sửa thì gọi PUT
+      await axios.put(`${API_URL}/models/${editingModel.id}`, formData);
+      alert("Đã cập nhật cấu hình!");
+    } else {
+      // Nếu không thì gọi POST (thêm mới)
       await axios.post(`${API_URL}/models`, formData);
-      alert("Đã lưu cấu hình!");
-      fetchModels();
-      // Reset form
-      setFormData({ ...formData, name: "", api_key: "" });
-      setTestStatus(null);
-      setTestMsg("");
-    } catch (error) {
-      alert("Lỗi khi lưu");
+      alert("Đã lưu cấu hình mới!");
     }
-  };
+    
+    fetchModels();
+    setEditingModel(null); // Reset trạng thái sửa
+    setFormData({ name: "", provider: "openai", base_url: "", api_key: "", model_name: "" });
+    setTestStatus(null);
+    setTestMsg("");
+  } catch (error) {
+    alert("Lỗi khi lưu cấu hình", error);
+  }
+};
 
   const handleActivate = async (id) => {
     try {
@@ -146,6 +168,7 @@ const SettingsPage = () => {
                         Kích hoạt
                       </button>
                     )}
+                    <button className="primary-btn"  style={{padding: '5px 10px', fontSize:'0.8rem'}} onClick={() => handleEdit(model)}>Sửa</button>
                     <button className="delete-btn-text" onClick={() => handleDelete(model.id)}>Xóa</button>
                   </div>
                 </div>
@@ -156,7 +179,7 @@ const SettingsPage = () => {
 
         {/* COT PHAI: FORM THEM MOI */}
         <div className="form-box">
-          <h3 style={{marginBottom: 20}}>Thêm Model Mới</h3>
+          <h3 style={{marginBottom: 20}}>{editingModel ? `Đang sửa Model: ${editingModel?.name || 'Không xác định'}` : "Thêm Model Mới"}</h3>
           
           <div className="form-group">
             <label>Loại Provider</label>
