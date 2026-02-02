@@ -8,7 +8,7 @@ WORKDIR /app
 
 # Copy requirements và cài đặt
 COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir --default-timeout=2000 -r requirements.txt
 
 # Copy toàn bộ code backend
 COPY . .
