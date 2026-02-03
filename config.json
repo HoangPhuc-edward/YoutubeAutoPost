@@ -1,5 +1,5 @@
 {
-  "GAS_WEBAPP_URL": "https://script.google.com/macros/s/AKfycbxoupNSWp2k785_4CSHErqdAYNSKlIWXaJZGYcyKEIY8y8Sv1krWAhMydSGSSe0l6UV/exec",
-  "MY_SHEET_URL": "https://docs.google.com/spreadsheets/d/1iKXsStSF5tl1Hbf3QBTC2CoN91x4-WulxwYOZEbYEFI/edit?usp=drivesdk",
+  "GAS_WEBAPP_URL": "https://script.google.com/macros/s/AKfycbwhnWBzBfU0FT5JBMMn-q9ztNC4Dp1xyc-wfe2XAdCzaoif3P99lJhlI8Giyx9AhCBj/exec",
+  "MY_SHEET_URL": "https://docs.google.com/spreadsheets/d/16Qwd3bj1zXrMnnpntw3lbhk7uGu9-LTK6oI8Dp7zqdc",
   "API_URL": "http://localhost:8000"
 }

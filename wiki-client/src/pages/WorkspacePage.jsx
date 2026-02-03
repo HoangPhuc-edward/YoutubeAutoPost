@@ -36,14 +36,31 @@ const WorkspacePage = () => {
 
   // Hàm helper để tách hashtag bằng Regex
   const extractHashtags = (text) => {
-    const hashtagRegex = /#[\w\u00C0-\u1EF9]+/g; // Hỗ trợ cả tiếng Việt
+  // 1. Regex tìm hashtag (hỗ trợ tiếng Việt có dấu)
+    const hashtagRegex = /#[\w\u00C0-\u1EF9]+/g;
     const matches = text.match(hashtagRegex) || [];
-    const cleanText = text.replace(hashtagRegex, '').trim();
-    return {
-      cleanText,
-      tags: matches.join(', ') // Đảm bảo có dấu phẩy ngăn cách
-    };
+
+    // 2. Tách văn bản thành danh sách các dòng để xử lý
+    const lines = text.split('\n');
+
+    // 3. Lọc bỏ các dòng "rác"
+    const filteredLines = lines.filter(line => {
+      const lineWithoutTags = line.replace(hashtagRegex, '').trim();
+      
+      const isHashtagLabel = /^(Hashtag|Hashtags|Từ khóa)\s*:/i.test(line);
+      
+      const isOnlyPunctuation = /^[,\s]*$/.test(lineWithoutTags);
+
+      return !( (isHashtagLabel || isOnlyPunctuation) && line.includes('#') );
+  });
+
+  return {
+    // Nối lại các dòng sạch, loại bỏ khoảng trắng thừa ở đầu/cuối bài
+    cleanText: filteredLines.join('\n').trim(),
+    // Trả về chuỗi hashtag đẹp, ngăn cách bằng dấu phẩy
+    tags: matches.join(', ')
   };
+};
 
   useEffect(() => {
     const fetchConfig = async () => {
